@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users
-  resources :users,only: [:show,:index,:edit,:update]
+  resources :users,only: [:show,:index,:edit,:update,:search] do
+  end
+  get "search" => "users#search"
   resources :books do
     resource :favorites, only:[:create, :destroy]
   end

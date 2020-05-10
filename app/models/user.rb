@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :favorites, dependent: :destroy
   has_many :book_comments,dependent: :destroy
 
+#フォロー機能
   has_many :follower, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
   has_many :followed, class_name: "Relationship", foreign_key: "followed_id", dependent: :destroy
 
@@ -22,9 +23,25 @@ class User < ApplicationRecord
        follower.find_by(followed_id: user_id).destroy
     end
 
-#フォローしていればtrueを返す
     def following?(user)
        following_user.include?(user)
+    end
+
+#search機能
+    def User.search(search, user_or_book,how_search)
+      if user_or_book == "1"
+        if    how_search == "1"
+                 User.where(['name LIKE ?', "%#{search}%"])
+        elsif how_search == "2"
+                 User.where(['name LIKE ?', "%#{search}"])
+        elsif how_search == "3"
+                 User.where(['name LIKE ?', "#{search}%"])
+        elsif how_search == "4"
+                 User.where(['name LIKE ?', "#{search}"])
+        else
+                 User.all
+        end
+      end
     end
 
   #バリデーションは該当するモデルに設定する。エラーにする条件を設定できる。
